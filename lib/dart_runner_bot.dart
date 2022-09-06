@@ -4,61 +4,51 @@ ReceivePort? managerPort;
 ReceivePort? outputPort;
 ReceivePort? errorPort;
 
-void runCode() async {
-  String dummyCode = r'''
-    void main() {
-      demoFunctionA();
-      print(sum(250,160));
-      demoFunctionB();
-    }
+/*
+  DESCRIPTION : Execute code is an isolate and handle errors, both compile-time and run-time, if any
 
-    void demoFunctionA() {
-      String demoA = "Hello There!";
-      print('This is a demo function A, $demoA');
-    }
+  PARAMS : code (String) - The Dart code submitted by the client
 
-    void demoFunctionB() {
-      String demoB = "Goodbye!";
-      print('This is a demo function B, $demoB');
-    }
-
-    int sum(int a, int b) {
-      return a+b;
-    }
-  ''';
-
+  RETURN : null
+*/
+void runCode(String code) async {
   final uri = Uri.dataFromString(
-    dummyCode,
+    code,
     mimeType: 'application/dart',
   );
 
-  managerPort = ReceivePort();
-  outputPort = ReceivePort();
-  errorPort = ReceivePort();
+  managerPort = ReceivePort(); // controls output and error ports
+  outputPort = ReceivePort(); // port specifically for output
+  errorPort =
+      ReceivePort(); // port specifically for errors during execution of said code
 
   errorPort?.listen((err) {
     print('---------------\nError occured\n---------------');
     print(Uri.decodeFull(err[0]));
-    print(Uri.decodeFull(err[1]).replaceAll(dummyCode, ''));
+    print(Uri.decodeFull(err[1]).replaceAll(code, ''));
   });
 
+  // Manager Port closes other ports when the isolate sends data onExit()
   managerPort?.listen((message) {
     closePorts();
   });
+
   try {
     await Isolate.spawnUri(uri, [], outputPort?.sendPort,
         onError: errorPort?.sendPort, onExit: managerPort?.sendPort);
     return;
   } catch (err) {
+    // In case of a compile-time error, the isolate fails to spawn, throwing an IsolateSpawnException
     print(Uri.decodeFull(err.toString())
         .replaceFirst(
             '''IsolateSpawnException: Unable to spawn isolate: ''', '')
-        .replaceAll(dummyCode, '')
+        .replaceAll(code, '')
         .replaceAll('data:application/dart,:', ''));
     closePorts();
   }
 }
 
+// Function to close all ports
 void closePorts() {
   outputPort?.close();
   errorPort?.close();

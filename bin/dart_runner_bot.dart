@@ -36,9 +36,10 @@ void main(List<String> arguments) async {
       final startIndex = msgText.indexOf('```');
       final endIndex = msgText.indexOf('```', startIndex + 3);
 
-      // Call the runCode function to execute code
+      // Call the runCode function to execute code and send the returned value to Discord
       String code = msgText.substring(startIndex + 3, endIndex).trim();
-      runCode(code);
+      runCode(code).then((value) => e.message.channel
+          .sendMessage(MessageBuilder.content('```$value```')));
     }
   });
 }

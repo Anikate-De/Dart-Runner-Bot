@@ -1,8 +1,8 @@
 import 'package:dart_runner_bot/commands/commands.dart';
+import 'package:dart_runner_bot/services/custom_message_builder.dart';
 import 'package:dart_runner_bot/services/env_loader.dart';
 import 'package:dart_runner_bot/services/output_formatter.dart';
 import 'package:nyxx/nyxx.dart';
-import 'package:nyxx_interactions/nyxx_interactions.dart';
 
 class InteractionEvent {
   static Future<void> onMessageReceived(INyxxWebsocket client) async {
@@ -17,18 +17,15 @@ class InteractionEvent {
 
       msgText = msgText.substring(EnvLoader.prefix.length);
 
+      if (msgText.startsWith('ping')) {
+        event.message.channel.sendMessage(
+          CustomMessageBuilder.build(
+              authorName: 'Ping • Dart Runner Bot', title: 'Pong! I\'m up.')
+            ..replyBuilder = ReplyBuilder.fromMessage(event.message),
+        );
+      }
+
       if (msgText.startsWith('help')) {
-        ComponentMessageBuilder componentMessageBuilder =
-            ComponentMessageBuilder();
-
-        EmbedBuilder embed = EmbedBuilder()
-          ..addFooter((EmbedFooterBuilder footer) {
-            footer.text =
-                'Love this bot? Star it on GitHub:\nhttps://github.com/Anikate-De/Dart-Runner-Bot';
-            footer.iconUrl =
-                'https://avatars.githubusercontent.com/u/40452578?v=4';
-          });
-
         List<EmbedFieldBuilder> helpFields = <EmbedFieldBuilder>[
           EmbedFieldBuilder(
             'Dart Runner Commands',
@@ -40,21 +37,14 @@ class InteractionEvent {
           ),
         ];
 
-        embed.title = 'Hi! I\'m the `Dart Runner Bot`';
-        embed.description =
-            'Hit me up if you want to execute some dart code right here on Discord.';
-        embed.fields.addAll(helpFields);
-        embed.color = DiscordColor.dartBlue;
-        embed.author = EmbedAuthorBuilder()
-          ..iconUrl =
-              'https://cdn.discordapp.com/attachments/756903745241088011/775823137312210974/dart.png'
-          ..name = 'Help • Dart Runner Bot';
-        embed.timestamp = DateTime.now();
-
         event.message.channel.sendMessage(
-          componentMessageBuilder
-            ..embeds = <EmbedBuilder>[embed]
-            ..replyBuilder = ReplyBuilder.fromMessage(event.message),
+          CustomMessageBuilder.build(
+            title: 'Hi! I\'m the `Dart Runner Bot`',
+            description:
+                'Hit me up if you want to execute some dart code right here on Discord.',
+            fields: helpFields,
+            authorName: 'Help • Dart Runner Bot',
+          )..replyBuilder = ReplyBuilder.fromMessage(event.message),
         );
       }
 

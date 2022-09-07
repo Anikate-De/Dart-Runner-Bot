@@ -205,7 +205,7 @@ packages:
     source: hosted
     version: "4.3.0"
   nyxx_interactions:
-    dependency: transitive
+    dependency: "direct main"
     description:
       name: nyxx_interactions
       url: "https://pub.dartlang.org"

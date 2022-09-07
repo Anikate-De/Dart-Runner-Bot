@@ -20,7 +20,7 @@ class InteractionEvent {
       var command = commandList.elementAt(0);
       var args = commandList.sublist(1);
 
-      switch (command) {
+      switch (command.trim()) {
         case 'ping':
           event.message.channel.sendMessage(
             CustomMessageBuilder.build(
@@ -28,7 +28,7 @@ class InteractionEvent {
               ..replyBuilder = ReplyBuilder.fromMessage(event.message),
           );
           break;
-
+        case '':
         case 'help':
           if (args.isNotEmpty) {
             Commands.helpSpecific(args)

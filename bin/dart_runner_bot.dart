@@ -8,7 +8,7 @@ void main(List<String> arguments) async {
   try {
     // Create new bot instance
     final INyxxWebsocket botClient =
-        NyxxFactory.createNyxxWebsocket(EnvLoader.token(), GatewayIntents.all)
+        NyxxFactory.createNyxxWebsocket(EnvLoader.token, GatewayIntents.all)
           ..registerPlugin(Logging()) // Default logging plugin
           ..registerPlugin(
               CliIntegration()) // Cli integration for nyxx allows stopping application via SIGTERM and SIGKILl

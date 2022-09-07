@@ -1,4 +1,5 @@
 import 'package:dart_runner_bot/commands/commands.dart';
+import 'package:dart_runner_bot/services/env_loader.dart';
 import 'package:dart_runner_bot/services/output_formatter.dart';
 import 'package:nyxx/nyxx.dart';
 
@@ -11,8 +12,12 @@ class InteractionEvent {
       /// and not get into a spam loop (we call that "botception").
       if (event.message.author.bot) return;
 
+      if (!msgText.startsWith(EnvLoader.prefix)) return;
+
+      msgText = msgText.substring(EnvLoader.prefix.length);
+
       // Check if message content equals "!run"
-      if (msgText.startsWith('!run')) {
+      if (msgText.startsWith('run')) {
         // Extract the dart code, present within '```'
         final startIndex = msgText.indexOf('```');
         final endIndex = msgText.indexOf('```', startIndex + 3);

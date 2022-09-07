@@ -11,12 +11,6 @@ class InteractionEvent {
       /// and not get into a spam loop (we call that "botception").
       if (event.message.author.bot) return;
 
-      // Check if message content equals "!ping"
-      if (msgText.startsWith("!ping")) {
-        // Send "Pong!" to channel where message was received
-        event.message.channel.sendMessage(MessageBuilder.content("Pong!"));
-      }
-
       // Check if message content equals "!run"
       if (msgText.startsWith('!run')) {
         // Extract the dart code, present within '```'
@@ -27,7 +21,8 @@ class InteractionEvent {
         String code = msgText.substring(startIndex + 3, endIndex).trim();
         Commands.runCode(code).then((value) {
           event.message.channel.sendMessage(MessageBuilder.content(
-              '```ansi\n${value.outputMessage + OutputFormatter.formatError(value.errorMessage)}```\nExited (${value.exitCode})'));
+              '```ansi\n${value.outputMessage + OutputFormatter.formatError(value.errorMessage)}```\nExited (${value.exitCode})')
+            ..replyBuilder = ReplyBuilder.fromMessage(event.message));
         });
       }
     });

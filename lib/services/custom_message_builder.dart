@@ -19,7 +19,7 @@ class CustomMessageBuilder {
 
     embed.author = EmbedAuthorBuilder()
       ..iconUrl = 'https://dartpad.dev/dart-192.png'
-      ..name = authorName ?? 'Dart Runner Bot';
+      ..name = '${authorName ?? ''} • Dart Runner Bot';
 
     if (title != null) embed.title = title;
     if (description != null) embed.description = description;

@@ -62,7 +62,7 @@ class InteractionEvent {
           break;
 
         case 'run':
-          var rawCode = args.join();
+          var rawCode = args.join(" ");
 
           try {
             // Extract the dart code, present within '```'
@@ -74,9 +74,16 @@ class InteractionEvent {
             // Call the runCode function to execute code and send the returned value as a message
             String code = rawCode.substring(startIndex + 3, endIndex).trim();
             Commands.runCode(code).then((value) {
-              event.message.channel.sendMessage(MessageBuilder.content(
-                  '```ansi\n${value.outputMessage + OutputFormatter.formatError(value.errorMessage)}```\nExited (${value.exitCode})')
-                ..replyBuilder = ReplyBuilder.fromMessage(event.message));
+              event.message.channel.sendMessage(
+                CustomMessageBuilder.build(
+                    title: value.errorMessage.isEmpty
+                        ? 'Yay! Successfully executed your code snippet.'
+                        : 'Looks like there might be a problem...',
+                    authorName: 'Output',
+                    description:
+                        '```ansi\n${value.outputMessage + OutputFormatter.formatError(value.errorMessage)}```\nExited (${value.exitCode})')
+                  ..replyBuilder = ReplyBuilder.fromMessage(event.message),
+              );
             });
           } catch (e) {
             await event.message.channel.sendMessage(

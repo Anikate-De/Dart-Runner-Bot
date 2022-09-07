@@ -2,7 +2,7 @@
 import 'package:intl/intl.dart';
 import 'package:nyxx/nyxx.dart';
 
-import 'custom_print_util.dart' as console;
+import '../utils/custom_print_util.dart' as console;
 
 /// LoggerType Enum
 enum LogType { success, info, warning, error }

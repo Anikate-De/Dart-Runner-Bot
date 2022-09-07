@@ -1,4 +1,5 @@
 import 'package:dart_runner_bot/commands/commands.dart';
+import 'package:dart_runner_bot/services/output_formatter.dart';
 import 'package:nyxx/nyxx.dart';
 
 class InteractionEvent {
@@ -24,9 +25,10 @@ class InteractionEvent {
 
         // Call the runCode function to execute code and send the returned value as a message
         String code = msgText.substring(startIndex + 3, endIndex).trim();
-        Commands.runCode(code).then((value) => event.message.channel
-            .sendMessage(MessageBuilder.content(
-                '```${value.outputMessage + value.errorMessage}```')));
+        Commands.runCode(code).then((value) {
+          event.message.channel.sendMessage(MessageBuilder.content(
+              '```ansi\n${value.outputMessage + OutputFormatter.formatError(value.errorMessage)}```\nExited (${value.exitCode})'));
+        });
       }
     });
   }

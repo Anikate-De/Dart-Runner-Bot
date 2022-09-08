@@ -46,16 +46,18 @@ Clone this repository and head to the \`Steps to Follow section\` to get started
 - **Docker** is installed
 
 ### Steps to Follow
+
+- Create an Application, add a bot, and then get the **`BOT TOKEN`** from your [Discord Developer Account](https://discord.com/developers/)
+
+- Create a `.env` file in the project root directory with these two values
+
+    ```env
+    TOKEN=<your-discord-bot-token>
+    PREFIX=dart! <<<replace it with your preferred command prefix, remove this tag>
+    ```
+
 - **If you don't have Docker on your system**
 
-    - Create an Application, add a bot, and then get the **`BOT TOKEN`** from your [Discord Developer Account](https://discord.com/developers/)
-
-    - Create a `.env` file in the project root directory with these two values
-
-        ```env
-        TOKEN=<your-discord-bot-token>
-        PREFIX=dart! <<<replace it with your preferred command prefix, remove this tag>
-        ```
     - Get the dependencies, in your terminal, execute -
         ```
         dart pub get
@@ -63,6 +65,19 @@ Clone this repository and head to the \`Steps to Follow section\` to get started
     - That's it, now you can run the bot -
         ```sh
         dart ./bin/dart_runner_bot.dart
+        ```
+
+- **With Docker (if available)**
+
+    - Build the Docker Image from the Dockerfile present in the repo -
+
+        ```
+        docker build -t dart-runner-bot .
+        ```
+    - That's it, run the docker image with the environment variables you made -
+
+        ```
+        docker run --env-file .env  dart-runner-bot
         ```
 
 ## 🤝 Contributing

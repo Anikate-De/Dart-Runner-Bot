@@ -7,8 +7,14 @@ import 'package:nyxx_interactions/nyxx_interactions.dart';
 
 class Commands {
   static Future<CodeOutput> runCode(String code) async {
-    final filename = 'temp/script.dart';
+    Directory dir = Directory('temp');
+    bool dirExists = await dir.exists();
 
+    if (!dirExists) {
+      await dir.create();
+    }
+
+    final filename = 'temp/script.dart';
     await File(filename).writeAsString(code);
 
     var process = await Process.run('dart', [filename]);

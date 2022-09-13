@@ -19,5 +19,5 @@ RUN dart pub get --offline
 # COPY --from=build /app/bin/dart_runner_bot /app/bin/
 
 # CMD [ "/app/bin/dart_runner_bot" ]
-
+EXPOSE 8080
 CMD [ "dart", "bin/dart_runner_bot.dart" ]
